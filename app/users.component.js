@@ -11,26 +11,26 @@ System.register(['angular2/core'], function(exports_1, context_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var HomeComponent;
+    var UsersComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            HomeComponent = (function () {
-                function HomeComponent() {
+            UsersComponent = (function () {
+                function UsersComponent() {
                 }
-                HomeComponent = __decorate([
+                UsersComponent = __decorate([
                     core_1.Component({
-                        template: '<h1>Home</h1>'
+                        template: '<h1>Users</h1>'
                     }), 
                     __metadata('design:paramtypes', [])
-                ], HomeComponent);
-                return HomeComponent;
+                ], UsersComponent);
+                return UsersComponent;
             }());
-            exports_1("HomeComponent", HomeComponent);
+            exports_1("UsersComponent", UsersComponent);
         }
     }
 });
-//# sourceMappingURL=home.component.js.map
+//# sourceMappingURL=users.component.js.map
