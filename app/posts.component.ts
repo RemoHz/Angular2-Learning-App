@@ -3,6 +3,7 @@ import {Component, OnInit} from 'angular2/core';
 import {PostService} from './post.service';
 import {SpinnerComponent} from './spinner.component';
 import {UserService} from './user.service';
+import {PaginationComponent} from './pagination.component';
 
 @Component({
     templateUrl: 'app/posts.component.html',
@@ -18,7 +19,7 @@ import {UserService} from './user.service';
          }
     `],
     providers: [PostService, UserService],
-    directives: [SpinnerComponent]
+    directives: [SpinnerComponent, PaginationComponent]
 })
 export class PostsComponent implements OnInit {
     posts = [];
@@ -26,6 +27,8 @@ export class PostsComponent implements OnInit {
     postsLoading;
     commentsLoading;
     currentPost;
+    pagedPosts = [];
+    pageSize = 10;
 
     constructor(private _postService: PostService, 
                 private _userService: UserService) 
@@ -48,10 +51,30 @@ export class PostsComponent implements OnInit {
 
         this._postService.getPosts(filter)
                         .subscribe(
-                            posts => this.posts = posts,
+                            posts => {
+                                this.posts = posts;
+                                this.pagedPosts = this.getPostsInPage(1);
+                            },
                             null,
                             () => { this.postsLoading = false; }
                         );
+    }
+
+    onPageChanged(page) {
+        this.pagedPosts = this.getPostsInPage(page);
+    }
+
+    private getPostsInPage(page) {
+        var result = [];
+
+        var startIndex = (page-1)*this.pageSize;
+        var endIndex = Math.min(startIndex + this.pageSize, this.posts.length);
+
+        for (var i = startIndex; i < endIndex; i++) {
+            result.push(this.posts[i]);
+        } 
+
+        return result;
     }
 
     reloadPosts(filter) {

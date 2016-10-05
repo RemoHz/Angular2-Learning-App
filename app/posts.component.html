@@ -12,8 +12,11 @@
         </select>
 
         <spinner [visible]="postsLoading"></spinner>
+
+        <pagination [items]="posts" (page-changed)="onPageChanged($event)"></pagination>
+
         <ul class="list-group posts">
-            <li *ngFor="#post of posts" 
+            <li *ngFor="#post of pagedPosts" 
                 class="list-group-item"
                 [class.active] = "currentPost == post"
                 (click)="select(post)"
@@ -21,6 +24,8 @@
                 {{ post.title }}
             </li>
         </ul>
+
+        <pagination [items]="posts" (page-changed)="onPageChanged($event)"></pagination>
     </div>
 
     <div class="col-md-6">
