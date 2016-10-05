@@ -2,6 +2,7 @@
 import {Component, OnInit} from 'angular2/core';
 import {PostService} from './post.service';
 import {SpinnerComponent} from './spinner.component';
+import {UserService} from './user.service';
 
 @Component({
     templateUrl: 'app/posts.component.html',
@@ -16,32 +17,58 @@ import {SpinnerComponent} from './spinner.component';
              color: #2c3e50;
          }
     `],
-    providers: [PostService],
+    providers: [PostService, UserService],
     directives: [SpinnerComponent]
 })
 export class PostsComponent implements OnInit {
     posts = [];
-    isLoading = true;
+    users = [];
+    postsLoading;
+    commentsLoading;
     currentPost;
 
-    constructor(private _postService: PostService) {
+    constructor(private _postService: PostService, 
+                private _userService: UserService) 
+    {
 
     }
 
     ngOnInit() {
-        this._postService.getPosts()
-                        .subscribe(posts => this.posts = posts,
-                        null,
-                        () => { this.isLoading = false; }
+        this.loadUsers();
+        this.loadPosts();
+    }
+
+    private loadUsers() {
+        this._userService.getUsers()
+                        .subscribe(users => this.users = users);
+    }
+
+    private loadPosts(filter?) {
+        this.postsLoading = true;
+
+        this._postService.getPosts(filter)
+                        .subscribe(
+                            posts => this.posts = posts,
+                            null,
+                            () => { this.postsLoading = false; }
                         );
+    }
+
+    reloadPosts(filter) {
+        this.currentPost = null;
+        this.loadPosts(filter);
     }
 
     select (post) {
         this.currentPost = post;
 
+        this.commentsLoading = true;
+
         this._postService.getComments(post.id)
                         .subscribe(
-                            comments => this.currentPost.comments = comments
+                            comments => this.currentPost.comments = comments,
+                            null,
+                            () => this.commentsLoading = false
                         );
     }
 }
